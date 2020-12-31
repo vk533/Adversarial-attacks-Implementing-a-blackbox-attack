@@ -1,0 +1,35 @@
+#!/bin/sh
+#
+# Usage: gputest.sh
+# Change job name and email address as needed 
+#        
+ 
+# -- our name ---
+#$ -N BB
+#$ -S /bin/sh
+# Make sure that the .e and .o file arrive in the
+#working directory
+#$ -cwd
+#Merge the standard out and standard error to one file
+#$ -j y
+# Send mail at submission and completion of script
+#$ -m be
+#$ -M ss4354@njit.edu
+# Specify GPU queue
+#$ -q datasci
+# Request one gpu (max two)
+#$ -l gpu=1
+/bin/echo Running on host: `hostname`.
+/bin/echo In directory: `pwd`
+/bin/echo Starting on: `date`
+
+
+
+#load the singularity module
+module load singularity
+
+#run the singularity command
+##singularity exec --nv --bind /home/s/ss4354/workspace/covid-19:/home/torch/ /opt/singularity_images/pytorch_ubuntu-16.04-afs.simg bash /home/torch/covid_19.sh > output_covid
+
+#singularity exec --nv /opt/singularity_images/deeplearning_cuda_10.1_ubuntu-16.04_python-3.6_v1.2.sif python train.py ./data/test_image.npy ./models/mlp20node_model ./models/bb_model.h5 > output_files
+singularity exec --nv /opt/singularity_images/deeplearning_cuda_10.1_ubuntu-16.04_python-3.6_v1.2.sif python test.py ./data/processed_test_data.npy ./models/mlp20node_model ./models/bb_model.h5 > result_file
